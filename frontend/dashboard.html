@@ -104,7 +104,7 @@ document.getElementById("welcomeUser").innerText = username;
 
 function loadHistory() {
 
-fetch(`http://localhost:5000/decisions/${email}`)
+fetch(`https://decision-v9t0.onrender.com/${email}`)
 .then(res => res.json())
 .then(data => {
 
@@ -159,7 +159,7 @@ historyDiv.appendChild(item);
 
 /* DELETE */
 function deleteDecision(id) {
-fetch(`http://localhost:5000/deleteDecision/${id}`, {
+fetch(`https://decision-v9t0.onrender.com/${id}`, {
 method: "DELETE"
 })
 .then(res => res.text())
