@@ -141,7 +141,7 @@ function calculate() {
     }));
 
     // SAVE TO DATABASE
-    fetch("http://localhost:5000/saveDecision", {
+    fetch("https://decision-v9t0.onrender.com/saveDecision", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
