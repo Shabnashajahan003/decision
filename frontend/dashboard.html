@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Decision Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="dashboardstyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+
+<div class="header">
+<h2><i style="color: #4CAF50;" class="fa-solid fa-brain"></i> Decision Companion</h2>
+
+<div class="user-area">
+<span>Welcome, <b id="welcomeUser"></b></span>
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+</div>
+
+
+<div class="stats-container">
+
+<div class="stat-card">
+<i class="fa-solid fa-list-check"></i>
+<h3 id="totalDecisions">0</h3>
+<p>Total Decisions</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-clock"></i>
+<h3 id="recentDecisions">0</h3>
+<p>Recent Decisions (7 days)</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-trophy"></i>
+<h3 id="bestOptionCount">0</h3>
+<p>Decisions Analyzed</p>
+</div>
+
+</div>
+
+<div class="main-container">
+
+<div class="card-large">
+
+<button class="primary-btn" onclick="startDecision()">
+<i class="fa-solid fa-plus"></i> Start New Decision
+</button>
+
+<div id="decisionArea" class="hidden">
+
+<h3>Decision Name</h3>
+<input type="text" id="decisionName" placeholder="Enter decision name">
+
+<h3>Number of Criteria</h3>
+<input type="number" id="criteriaCount" placeholder="Enter number">
+<button onclick="generateCriteria()">Create Criteria</button>
+
+<div id="criteriaForm"></div>
+
+<h3>Number of Options</h3>
+<input type="number" id="optionCount" placeholder="Enter number">
+<button onclick="generateOptions()">Create Options</button>
+
+<div id="optionsForm"></div>
+
+<p id="errorMsg" class="error"></p>
+
+<button class="calculate-btn" onclick="calculate()">
+Calculate Best Option
+</button>
+
+</div>
+
+</div>
+
+
+<div class="history-section">
+<h2><i class="fa-solid fa-clock-rotate-left"></i> Decision History</h2>
+
+<input type="text" id="searchHistory" placeholder="Search decisions...">
+
+<div id="history"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const email = localStorage.getItem("userEmail");
+
+if (!email) {
+alert("Please login first");
+window.location.href = "login.html";
+}
+
+const username = email.split("@")[0];
+document.getElementById("welcomeUser").innerText = username;
+
+function loadHistory() {
+
+fetch(`http://localhost:5000/decisions/${email}`)
+.then(res => res.json())
+.then(data => {
+
+const historyDiv = document.getElementById("history");
+historyDiv.innerHTML = "";
+
+
+const totalDecisions = data.length;
+
+const now = new Date();
+const recent = data.filter(d => {
+const createdDate = new Date(d.createdAt);
+const diff = (now - createdDate) / (1000 * 60 * 60 * 24);
+return diff <= 7;
+});
+
+/* DECISIONS ANALYZED */
+const bestOptions = data.filter(d => d.bestOption && d.bestOption !== "");
+
+/* UPDATE DASHBOARD */
+document.getElementById("totalDecisions").innerText = totalDecisions;
+document.getElementById("recentDecisions").innerText = recent.length;
+document.getElementById("bestOptionCount").innerText = bestOptions.length;
+
+if (data.length === 0) {
+historyDiv.innerHTML = "<p>No decisions yet. Start your first decision</p>";
+return;
+}
+
+data.reverse().forEach(decision => {
+
+const date = new Date(decision.createdAt).toLocaleDateString();
+
+const item = document.createElement("div");
+item.classList.add("history-card");
+
+item.innerHTML = `
+<h3>${decision.decisionName}</h3>
+<p><b>Date:</b> ${date}</p>
+<p><b>Best Option:</b> ${decision.bestOption}</p>
+<button onclick="deleteDecision('${decision._id}')">
+<i class="fa-solid fa-trash"></i> Delete
+</button>
+`;
+
+historyDiv.appendChild(item);
+
+});
+
+});
+}
+
+/* DELETE */
+function deleteDecision(id) {
+fetch(`http://localhost:5000/deleteDecision/${id}`, {
+method: "DELETE"
+})
+.then(res => res.text())
+.then(() => {
+loadHistory();
+});
+}
+
+/* START DECISION */
+function startDecision() {
+document.getElementById("decisionArea").classList.remove("hidden");
+}
+
+/* LOGOUT */
+function logout() {
+localStorage.removeItem("userEmail");
+window.location.href = "login.html";
+}
+
+/* SEARCH */
+document.getElementById("searchHistory").addEventListener("input", function() {
+
+const search = this.value.toLowerCase();
+const cards = document.querySelectorAll(".history-card");
+
+cards.forEach(card => {
+const text = card.innerText.toLowerCase();
+card.style.display = text.includes(search) ? "block" : "none";
+});
+
+});
+/* EDIT MODE AUTO FILL */
+
+window.addEventListener("load", function () {
+
+const urlParams = new URLSearchParams(window.location.search);
+const editMode = urlParams.get("edit");
+
+if (editMode === "true") {
+
+let data = JSON.parse(localStorage.getItem("decisionData"));
+
+if (!data) return;
+
+
+startDecision();
+
+
+document.getElementById("decisionName").value = data.decisionName;
+
+
+document.getElementById("criteriaCount").value = data.criteria.length;
+generateCriteria();
+
+data.criteria.forEach((c, i) => {
+document.getElementById(`cname${i}`).value = c.name;
+document.getElementById(`cweight${i}`).value = c.weight;
+document.getElementById(`ccost${i}`).value = c.type;
+});
+
+
+document.getElementById("optionCount").value = data.options.length;
+generateOptions();
+
+data.options.forEach((o, i) => {
+document.getElementById(`oname${i}`).value = o.name;
+
+o.values.forEach((val, j) => {
+document.getElementById(`oval${i}_${j}`).value = val;
+});
+});
+
+}
+});
+
+loadHistory();
+
+</script>
+
+<script src="script.js"></script>
+
+</body>
+</html>

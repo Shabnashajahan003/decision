@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Decision Result</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(120deg,#0f172a,#111827,#020617);
+color:white;
+min-height:100vh;
+}
+
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:rgba(0,0,0,0.4);
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.logout-btn{
+background:#ef4444;
+color:white;
+padding:8px 16px;
+border-radius:8px;
+cursor:pointer;
+border:none;
+}
+
+
+.main-container{
+display:flex;
+justify-content:center;
+padding:40px;
+}
+
+
+.card-large{
+width:750px;
+padding:35px;
+border-radius:18px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
+
+
+.best-box{
+background:rgba(34,197,94,0.15);
+border-left:4px solid #22c55e;
+padding:20px;
+margin-top:20px;
+margin-bottom:30px;
+border-radius:12px;
+}
+.best-box i{
+color: gold;
+margin-right:8px;
+}
+
+
+.result-box{
+background:rgba(255,255,255,0.04);
+padding:18px;
+border-radius:14px;
+margin-bottom:14px;
+border-left:4px solid #38bdf8;
+transition:0.3s;
+}
+
+.result-box:hover{
+transform:translateY(-4px);
+background:rgba(255,255,255,0.07);
+}
+
+
+button{
+padding:10px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+margin-top:15px;
+font-size:14px;
+transition:0.25s;
+}
+
+.primary-btn{
+background:linear-gradient(90deg,#38bdf8,#6366f1);
+color:white;
+}
+
+.primary-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(99,102,241,0.4);
+}
+
+.secondary-btn{
+background:rgba(255,255,255,0.1);
+color:white;
+margin-left:10px;
+}
+
+.secondary-btn:hover{
+background:rgba(255,255,255,0.2);
+}
+
+/* TABLET */
+@media(max-width:900px){
+
+.header{
+padding:15px 20px;
+}
+
+.card-large{
+padding:28px;
+}
+
+}
+
+/* MOBILE */
+@media(max-width:600px){
+
+.header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.main-container{
+padding:25px 15px;
+}
+
+.card-large{
+padding:22px;
+}
+
+h2{
+font-size:20px;
+}
+
+h3{
+font-size:16px;
+}
+
+button{
+width:100%;
+margin-left:0;
+}
+
+.secondary-btn{
+margin-left:0;
+}
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+
+<div class="header">
+<h2><i style="color: #4CAF50;" class="fa-solid fa-brain"></i> Decision Companion</h2>
+
+<div class="user-area">
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+</div>
+
+<div class="main-container">
+<div class="card-large">
+
+<h2>Decision Result</h2>
+
+<div id="bestOption" class="best-box"></div>
+
+<h3>All Options Ranking</h3>
+<div id="result"></div>
+
+<button class="primary-btn" onclick="back()">Back to Dashboard</button>
+<button class="secondary-btn" onclick="editDecision()">Edit Decision</button>
+
+</div>
+</div>
+
+<script>
+window.onload = function () {
+
+let data = JSON.parse(localStorage.getItem("results"));
+let resultDiv = document.getElementById("result");
+let bestDiv = document.getElementById("bestOption");
+
+if (!data || data.length === 0) {
+resultDiv.innerHTML = "No results found";
+return;
+}
+
+// BEST OPTION
+let best = data[0];
+
+bestDiv.innerHTML = `
+<h2><i class="fa-solid fa-trophy"></i> Best Option</h2>
+<h3>${best.name}</h3>
+<p>Score: ${best.score.toFixed(3)}</p>
+`;
+
+// ALL OPTIONS
+let html = "";
+
+data.forEach((option, index) => {
+html += `
+<div class="result-box">
+<h3>${index + 1}. ${option.name}</h3>
+<p>Score: ${option.score.toFixed(3)}</p>
+</div>
+`;
+});
+
+resultDiv.innerHTML = html;
+};
+
+function back() {
+window.location.href = "dashboard.html";
+}
+
+function editDecision() {
+
+let decisionData = JSON.parse(localStorage.getItem("decisionData"));
+
+if (!decisionData) {
+alert("No decision data available to edit.");
+return;
+}
+
+window.location.href = "dashboard.html?edit=true";
+}
+
+function logout(){
+localStorage.clear();
+window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>
+

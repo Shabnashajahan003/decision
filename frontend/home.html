@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Companion</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(120deg,#0f172a,#111827,#020617);
+color:white;
+overflow-x:hidden;
+}
+
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 60px;
+background:rgba(2,6,23,0.95);
+position:sticky;
+top:0;
+z-index:100;
+border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.logo{
+font-size:24px;
+font-weight:600;
+letter-spacing:1px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.nav-buttons button{
+margin-left:10px;
+padding:9px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+transition:0.3s;
+}
+
+.login-btn{
+background:transparent;
+border:1px solid #38bdf8;
+color:#38bdf8;
+}
+
+.login-btn:hover{
+background:#38bdf8;
+color:black;
+}
+
+.signup-btn{
+background:#22c55e;
+color:black;
+}
+
+.signup-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 15px rgba(34,197,94,0.4);
+}
+
+
+
+.hero{
+text-align:center;
+padding:90px 20px 40px;
+max-width:900px;
+margin:auto;
+}
+
+.hero h1{
+font-size:48px;
+margin-bottom:18px;
+line-height:1.2;
+animation:fadeUp 1s ease;
+}
+
+.hero span{
+color:#38bdf8;
+}
+
+.hero p{
+color:#cbd5f5;
+font-size:18px;
+margin-bottom:30px;
+animation:fadeUp 1.2s ease;
+}
+
+.start-btn{
+background:linear-gradient(90deg,#38bdf8,#6366f1);
+padding:14px 28px;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+color:white;
+transition:0.3s;
+}
+
+.start-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(99,102,241,0.5);
+}
+
+
+
+.process{
+margin-top:50px;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:25px;
+flex-wrap:wrap;
+}
+
+.step{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+width:180px;
+height:90px;
+border-radius:14px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:17px;
+box-shadow:0 8px 20px rgba(0,0,0,0.4);
+opacity:0;
+transform:translateY(40px);
+animation:slideUp 1s forwards;
+}
+
+.step:nth-child(1){animation-delay:0.4s;}
+.step:nth-child(3){animation-delay:1.2s;}
+.step:nth-child(5){animation-delay:2s;}
+
+.arrow{
+font-size:26px;
+opacity:0;
+animation:fade 1s forwards;
+}
+
+.arrow:nth-child(2){animation-delay:0.8s;}
+.arrow:nth-child(4){animation-delay:1.6s;}
+
+
+
+.section{
+padding:80px 40px;
+text-align:center;
+max-width:1100px;
+margin:auto;
+}
+
+.section h2{
+margin-bottom:40px;
+font-size:32px;
+color:#F8FAFC;
+letter-spacing:0.5px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+padding:25px;
+border-radius:16px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+background:rgba(255,255,255,0.08);
+}
+.card h3{
+color:#38BDF8;
+margin-bottom:10px;
+}
+
+.card p{
+color:#CBD5E1;
+font-size:15px;
+line-height:1.5;
+}
+footer{
+margin-top:70px;
+text-align:center;
+padding:20px;
+color:#94a3b8;
+border-top:1px solid rgba(255,255,255,0.08);
+}
+
+
+
+@keyframes slideUp{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes fade{
+to{
+opacity:1;
+}
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+
+
+/* TABLET */
+@media(max-width:1024px){
+
+nav{
+padding:15px 30px;
+}
+
+.hero h1{
+font-size:38px;
+}
+
+.process{
+gap:15px;
+}
+
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+nav{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.nav-buttons{
+width:100%;
+justify-content:flex-start;
+}
+
+.hero{
+padding-top:60px;
+}
+
+.hero h1{
+font-size:30px;
+}
+
+.hero p{
+font-size:15px;
+}
+
+.start-btn{
+width:100%;
+max-width:260px;
+}
+
+.process{
+flex-direction:column;
+}
+
+.arrow{
+transform:rotate(90deg);
+}
+
+.step{
+width:90%;
+max-width:280px;
+height:70px;
+font-size:15px;
+}
+
+.section{
+padding:60px 20px;
+}
+
+
+}
+
+/* SMALL MOBILE */
+@media(max-width:480px){
+
+.hero h1{
+font-size:26px;
+}
+
+.logo{
+font-size:20px;
+}
+
+.nav-buttons button{
+width:100%;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<nav>
+<div class="logo">
+<i  style="color:#4CAF50;" class="fa-solid fa-brain"></i> Decision Companion
+</div>
+
+<div class="nav-buttons">
+<button class="login-btn" onclick="goLogin()">Login</button>
+<button class="signup-btn" onclick="goSignup()">Sign Up</button>
+</div>
+</nav>
+
+<section class="hero">
+
+<h1><span>Your Intelligent Decision Partner</span></h1>
+
+<p>
+Analyze multiple options using structured criteria and intelligent scoring
+to identify the most suitable decision quickly and clearly.
+</p>
+
+<button class="start-btn" onclick="goSignup()">Get Started</button>
+
+<div class="process">
+<div class="step">Add Criteria</div>
+<div class="arrow">→</div>
+<div class="step">Compare Options</div>
+<div class="arrow">→</div>
+<div class="step">Best Result</div>
+</div>
+
+</section>
+
+
+<section class="section">
+
+<h2>Why Use Decision Companion?</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Multi Criteria Analysis</h3>
+<p>Compare options based on weighted decision factors.</p>
+</div>
+
+<div class="card">
+<h3>Smart Scoring Engine</h3>
+<p>Automatically calculate the best choice.</p>
+</div>
+
+<div class="card">
+<h3>Decision History</h3>
+<p>Track and revisit all your previous decisions.</p>
+</div>
+
+<div class="card">
+<h3>User Dashboard</h3>
+<p>Manage and monitor your decisions in one place.</p>
+</div>
+
+</div>
+
+</section>
+
+
+<footer>
+© 2026 Decision Companion System
+</footer>
+
+<script>
+function goLogin(){
+window.location.href="login.html";
+}
+
+function goSignup(){
+window.location.href="signup.html";
+}
+</script>
+
+<script src="auth.js"></script>
+
+</body>
+</html>
